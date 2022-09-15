@@ -11,6 +11,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.WebApplicationException;
 
 import java.util.List;
 
@@ -65,6 +66,31 @@ class MovieFacadeTest
     {
         long expected = 2;
         long actual = facade.countAll();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getMovieById()
+    {
+        MovieDTO actual = facade.getMovieById(m1.getId());
+        MovieDTO expected = new MovieDTO(m1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getMovieByIdException()
+    {
+        assertThrows(WebApplicationException.class, () -> {
+            MovieDTO actual = facade.getMovieById(34);
+        });
+
+    }
+
+    @Test
+    void getMovieByTitle()
+    {
+        MovieDTO actual = facade.getMovieByTitle(m1.getTitle());
+        MovieDTO expected = new MovieDTO(m1);
         assertEquals(expected, actual);
     }
 }

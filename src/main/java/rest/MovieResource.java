@@ -53,4 +53,24 @@ public class MovieResource
         return "{\"count\":"+count+"}";
     }
 
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getById(@PathParam("id") int id)
+    {
+        MovieDTO movieDTO = FACADE.getMovieById(id);
+        return GSON.toJson(movieDTO);
+    }
+
+    @GET
+    @Path("title/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getByTitle(@PathParam("name") String name)
+    {
+        MovieDTO movieDTO = FACADE.getMovieByTitle(name);
+        return GSON.toJson(movieDTO);
+    }
+
+
+
 }

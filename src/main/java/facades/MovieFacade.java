@@ -7,7 +7,7 @@ import entities.MovieDTO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 public class MovieFacade
@@ -65,5 +65,43 @@ public class MovieFacade
                 "Rambo - First Blood", Arrays.asList(new String[]{"Sly Stallone", "Brian Dennehy", "Jack Starrett"})));
         em.getTransaction().commit();
         em.close();
+    }
+
+    public MovieDTO getMovieById(int id)
+    {
+        EntityManager em = getEntityManager();
+        try
+        {
+            Movie movie = em.find(Movie.class, id);
+            if (movie != null)
+            {
+                return new MovieDTO(movie);
+            }
+            throw new WebApplicationException("Movie with id = " + id + " does not exist");
+        }
+        finally
+        {
+            em.close();
+        }
+    }
+
+    public MovieDTO getMovieByTitle(String title)
+    {
+        EntityManager em = getEntityManager();
+        try
+        {
+            TypedQuery<Movie> query = em.createQuery("SELECT m FROM Movie m WHERE m.title = :title", Movie.class);
+            query.setParameter("title", title);
+            Movie movie = query.getSingleResult();
+            if (movie != null)
+            {
+                return new MovieDTO(movie);
+            }
+            throw new WebApplicationException("Movie with title = " + title + " does not exist");
+        }
+        finally
+        {
+            em.close();
+        }
     }
 }
